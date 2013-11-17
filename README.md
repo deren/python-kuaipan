@@ -23,3 +23,7 @@ Requirement :
 
 
 PS: Migrated from <https://bitbucket.org/deren_wu/python-kuaipan> at 2013/11/17
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/deren/python-kuaipan/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
