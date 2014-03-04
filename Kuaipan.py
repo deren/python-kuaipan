@@ -284,19 +284,22 @@ class KuaipanFile(object):
     def upload_file(self, localfile, kuaipan_path=None, ForceOverwrite=True):
         """
         Description : 上传文件
+        Args:
+            localfile: 本地文件路径
+            kuaipan_path: 快盘的路径
         Reference link :
             http://www.kuaipan.cn/developers/document_apiupload.htm
         """
         url = '%s1/fileops/upload_file'
         url = url % (self.upload_locate()['url'])
-        parameters = {'path': localfile,
+        parameters = {'path': kuaipan_path,
                         'root': 'app_folder',
                         'overwrite' : ForceOverwrite
                     }
         target_url = self.GetOauthUrl(url, method='POST', parameters=parameters)
         #poster.streaminghttp.register_openers()
         self.SetUrlHandler(UsePoster=True)
-        data, headers = poster.encode.multipart_encode({"image1": open(parameters['path'], "rb")})
+        data, headers = poster.encode.multipart_encode({"file": open(localfile, "rb")})
         request = urllib2.Request(target_url, data=data, headers=headers)
         try:
             response = urllib2.urlopen(request)
