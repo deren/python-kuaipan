@@ -281,7 +281,7 @@ class KuaipanFile(object):
             parameters['access_code'] = access_code
         return self.oauth_http_and_json_parse(url, method='GET', parameters=parameters)
 
-    def upload_file(self, localfile, kuaipan_path=None, ForceOverwrite=True):
+    def upload_file(self, localfile, kuaipan_path, ForceOverwrite=True):
         """
         Description : 上传文件
         Args:
