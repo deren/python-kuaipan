@@ -33,54 +33,64 @@ consumer_secret = 'your_kuaipan_consumer_secret'
 oauth_token        = 'your_kuaipan_oauth_token'
 oauth_token_secret = 'your_kuaipan_oauth_token_secret'
 
+''' Make sure we are running in UTF-8 encoding by default '''
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 ''' Get main instance for file operation '''
 kuaipan_file = Kuaipan.KuaipanFile(consumer_key, consumer_secret, oauth_token, oauth_token_secret)
 
 ''' Create a dummy test file '''
-myfile = 'kuaipan_test.txt'
+myfile = 'demo_test.txt'
 with open(myfile, 'wb') as fp:
-    fp.write('This a demostration for Kuaipan API')
+    fp.write(u'English: This a demostration for API usage!\n'+
+				u'繁體中文： 範例測試\n'+
+				u'简体中文： 范例测试\n')
 mydir = 'testdir'
-
+myfile_kuaipan = '/'+mydir+'/'+myfile
 
 print ' API demostration start! '
 
 print '\n 1. show information of your account '
 pprint.pprint( kuaipan_file.account_info() )
 
-print '\n 2. Upload our test file '
-pprint.pprint( kuaipan_file.upload_file(myfile, ForceOverwrite=True) )
-
-print '\n 3. Get file metadata '
-pprint.pprint( kuaipan_file.metadata(myfile) )
-
-print '\n 4. Get file reference info '
-pprint.pprint( kuaipan_file.copy_ref(myfile) )
-
-print '\n 5. Get share link '
-pprint.pprint( kuaipan_file.shares(myfile) )
-
-print '\n 6. Get HTML document view '
-pprint.pprint( kuaipan_file.fileops_documentView(myfile, zip=0) )
-
-print '\n 7. Get thumbnail '
-print( kuaipan_file.fileops_thumbnail(100, 100, myfile) )
-
-print '\n 8. Get file history (If the file is never changed, the history would be 404 not found) '
-pprint.pprint( kuaipan_file.upload_file(myfile, ForceOverwrite=True) ) # upload again to generate history
-pprint.pprint( kuaipan_file.history(myfile) )
-
-print '\n 7. Copy file (or directory) '
-pprint.pprint( kuaipan_file.fileops_copy(myfile, myfile+'2') )
-
-print '\n 8. Move file (or directory) '
-pprint.pprint( kuaipan_file.fileops_move(myfile+'2', myfile+'3') )
-
-print '\n 9. Delete file (or directory) '
-pprint.pprint( kuaipan_file.fileops_delete(myfile+'3') )
-
-print '\n 10. Create directory '
+print '\n 2. Create directory '
 pprint.pprint( kuaipan_file.fileops_create_folder(mydir) )
 
-print '\n 11. Download file to newfile.txt '
-kuaipan_file.download_file(myfile, local_filepath="newfile.txt")
+print '\n 3. Upload our test file '
+pprint.pprint( kuaipan_file.upload_file(myfile, kuaipan_path=myfile_kuaipan, ForceOverwrite=True) )
+
+print '\n 4. Get file metadata '
+pprint.pprint( kuaipan_file.metadata(myfile_kuaipan) )
+
+print '\n 5. Get file reference info '
+pprint.pprint( kuaipan_file.copy_ref(myfile_kuaipan) )
+
+print '\n 6. Get share link (Response [{u\'msg\': u\'PSA_OUTLINK_STATUS_REVIEWING\'}] means the file is under review by Kuaipan office. You need to wait!)'
+try:
+    pprint.pprint( kuaipan_file.shares(myfile_kuaipan) )
+except:
+    pprint.pprint('Is your file with zero size or include invalid file name?')
+
+print '\n 7. Get HTML document view '
+pprint.pprint( kuaipan_file.fileops_documentView(myfile_kuaipan, zip=0) )
+
+print '\n 8. Get thumbnail '
+print( kuaipan_file.fileops_thumbnail(100, 100, myfile_kuaipan) )
+
+print '\n 9. Get file history (If the file is never changed, the history would be 404 not found) '
+pprint.pprint( kuaipan_file.upload_file(myfile, kuaipan_path=myfile_kuaipan, ForceOverwrite=True) ) # upload again to generate history
+pprint.pprint( kuaipan_file.history(myfile_kuaipan) )
+
+print '\n 10. Copy file (or directory) '
+pprint.pprint( kuaipan_file.fileops_copy(myfile_kuaipan, myfile_kuaipan+'2') )
+
+print '\n 11. Move file (or directory) '
+pprint.pprint( kuaipan_file.fileops_move(myfile_kuaipan+'2', myfile_kuaipan+'3') )
+
+print '\n 12. Delete file (or directory) '
+pprint.pprint( kuaipan_file.fileops_delete(myfile_kuaipan+'3') )
+
+print '\n 13. Download file to newfile.txt '
+kuaipan_file.download_file(myfile_kuaipan, local_filepath="newfile.txt")
